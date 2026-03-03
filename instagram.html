@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Instagram</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#0b1f26;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  color:white;
+}
+
+/* CARD */
+.container{
+  width:420px;
+  text-align:center;
+}
+
+/* INPUTS */
+input{
+  width:100%;
+  padding:16px;
+  margin-bottom:15px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.15);
+  background:rgba(255,255,255,0.03);
+  color:white;
+  outline:none;
+}
+
+/* BUTTON */
+button{
+  width:100%;
+  padding:14px;
+  border-radius:25px;
+  border:none;
+  background:#1f4f82;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#2563a6;
+}
+
+/* LINKS */
+.link{
+  margin-top:15px;
+  font-size:14px;
+  cursor:pointer;
+  color:#58a6ff;
+}
+
+.link:hover{
+  text-decoration:underline;
+}
+
+/* EFFECT AREAS */
+#status{ margin-top:15px; min-height:20px; }
+#error{ display:none; color:red; margin-top:10px; }
+#countdown{ display:none; font-size:40px; margin-top:15px; }
+#prank{ display:none; margin-top:20px; font-size:26px; color:#ff4081; }
+
+/* SHAKE */
+@keyframes shake{
+  0%{transform:translate(0,0);}
+  25%{transform:translate(-5px,5px);}
+  50%{transform:translate(5px,-5px);}
+  75%{transform:translate(-5px,-5px);}
+  100%{transform:translate(0,0);}
+}
+.shake{
+  animation:shake 0.3s infinite;
+}
+
+/* FOOTER */
+.footer-fixed{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  text-align:center;
+  padding:12px 0;
+  font-size:13px;
+  background:rgba(0,0,0,0.6);
+  color:white;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="container">
+
+<h2>Instagram Login</h2>
+
+<input type="text" placeholder="Username,Mobil number,Email">
+<input type="password" placeholder="Password">
+
+<button id="loginBtn">Log In</button>
+
+<div class="link" id="forgot">Forgot password?</div>
+<div class="link" id="faceLogin">Log in with Facebook</div>
+<div class="link" id="create">Create new account</div>
+
+<div id="status"></div>
+<div id="error">⚠ Suspicious Login Detected!</div>
+<div id="countdown"></div>
+<div id="prank">🎉 HAPPY APRIL FOOLS 😂</div>
+
+</div>
+
+<div class="footer-fixed">© 2026 Instagram. All Rights Reserved.</div>
+
+<script>
+
+const loginBtn = document.getElementById("loginBtn");
+const status = document.getElementById("status");
+const errorBox = document.getElementById("error");
+const countdown = document.getElementById("countdown");
+const prank = document.getElementById("prank");
+const container = document.getElementById("container");
+
+/* LOGIN */
+loginBtn.addEventListener("click", function(){
+
+  const steps = [
+    "Connecting...",
+    "Encrypting...",
+    "Verifying...",
+    "Authenticating..."
+  ];
+
+  let i = 0;
+
+  const interval = setInterval(function(){
+    status.innerText = steps[i];
+    i++;
+
+    if(i >= steps.length){
+      clearInterval(interval);
+      status.innerText = "";
+      showError();
+    }
+  }, 800);
+
+});
+
+/* SHAKE + ERROR */
+function showError(){
+  errorBox.style.display = "block";
+  container.classList.add("shake");
+
+  setTimeout(function(){
+    container.classList.remove("shake");
+    errorBox.style.display = "none";
+    startCountdown();
+  },2000);
+}
+/* COUNTDOWN */
+function startCountdown(){
+  countdown.style.display = "block";
+  let num = 3;
+  countdown.innerText = num;
+
+  const timer = setInterval(function(){
+    num--;
+    countdown.innerText = num;
+
+    if(num <= 0){
+      clearInterval(timer);
+      countdown.style.display = "none";
+      revealPrank();
+    }
+  },1000);
+}
+
+/* FINAL REVEAL */
+function revealPrank(){
+  prank.style.display = "block";
+  launchConfetti();
+}
+
+/* CONFETTI */
+function launchConfetti(){
+  for(let i=0;i<100;i++){
+
+    const piece = document.createElement("div");
+
+    piece.style.position = "fixed";
+    piece.style.width = "8px";
+    piece.style.height = "8px";
+    piece.style.background = "hsl(" + Math.random()*360 + ",100%,50%)";
+    piece.style.top = "-10px";
+    piece.style.left = Math.random()*window.innerWidth + "px";
+    piece.style.zIndex = "999";
+
+    document.body.appendChild(piece);
+
+    piece.animate([
+      { transform:"translateY(0px) rotate(0deg)" },
+      { transform:"translateY(100vh) rotate(720deg)" }
+    ],{
+      duration:2000 + Math.random()*2000,
+      easing:"linear"
+    });
+
+    setTimeout(function(){
+      piece.remove();
+    },4000);
+  }
+}
+
+/* FAKE LINKS */
+document.getElementById("forgot").onclick = function(){
+  showMessage("Password reset link sent.");
+};
+
+document.getElementById("faceLogin").onclick = function(){
+  showMessage("Redirecting to Facebook...");
+};
+
+document.getElementById("create").onclick = function(){
+  showMessage("Account creation temporarily disabled.");
+};
+
+function showMessage(msg){
+  status.innerText = msg;
+  setTimeout(function(){
+    status.innerText = "";
+  },3000);
+}
+
+</script>
+
+</body>
+</html>
